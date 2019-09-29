@@ -6,63 +6,51 @@
     android:layout_height="match_parent"
     tools:context=".DjikstraActivity">
 
-    <TextView
+    <Button
         android:id="@+id/start_djikstra"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:padding="8dp"
-        android:text="Start Djikstra"
-        android:background="@drawable/white_cell_bg_with_black_border"
-        android:textColor="#000"
-        android:textSize="22sp"
+        android:text="@string/start_djikstra"
+        style="@style/default_textView"
         app:layout_constraintBottom_toTopOf="@+id/wall"
         app:layout_constraintEnd_toEndOf="@+id/destination"
         app:layout_constraintStart_toStartOf="@+id/start_location"
         app:layout_constraintTop_toBottomOf="@+id/board" />
 
-    <TextView
+    <nodar.visual.algo.views.NodarButton
         android:id="@+id/start_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/start_cell_bg"
-        android:padding="8dp"
-        android:text="Start Location"
-        android:textColor="#fff"
-        android:textSize="22sp"
-        android:textStyle="bold"
+        android:text="@string/start_location"
+        style="@style/default_textView"
+        android:background="@drawable/start_location_btn_selector"
         app:layout_constraintBottom_toBottomOf="@+id/wall"
         app:layout_constraintEnd_toStartOf="@+id/wall"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/wall" />
 
-    <TextView
+    <nodar.visual.algo.views.NodarButton
         android:id="@+id/destination"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/destination_cell_bg"
-        android:padding="8dp"
-        android:text="Destionation"
-        android:textColor="#fff"
-        android:textSize="22sp"
-        android:textStyle="bold"
+        android:background="@drawable/destination_btn_selector"
+        android:text="@string/destination"
+        style="@style/default_textView"
         app:layout_constraintBottom_toBottomOf="@+id/wall"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/wall"
         app:layout_constraintTop_toTopOf="@+id/wall" />
 
-    <TextView
+    <nodar.visual.algo.views.NodarButton
         android:id="@+id/wall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/black_cell_bg"
-        android:padding="8dp"
-        android:text="Wall"
-        android:textColor="#fff"
-        android:textSize="22sp"
-        android:textStyle="bold"
+        android:background="@drawable/wall_btn_selector"
+        android:text="@string/wall"
+        style="@style/default_textView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/destination"
         app:layout_constraintStart_toEndOf="@+id/start_location" />
