@@ -18,6 +18,10 @@ fun View.makeDestionationPosition() {
     this.background = ResourcesCompat.getDrawable(resources, R.drawable.destination_cell_bg, null)
 }
 
+fun View.markAsWall() {
+    this.background = ResourcesCompat.getDrawable(resources, R.drawable.black_cell_bg, null)
+}
+
 //first->i second->j
 fun Int.coordinate(): Pair<Int, Int> {
     return Pair(this / 14, this % 14)

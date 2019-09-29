@@ -14,13 +14,15 @@ class Djikstra {
     val pq = PriorityQueue<Node>()
     val parent = IntArray(1000)
 
-    fun initialise(start: Int, end: Int) {
-        for (i in 0..195) {
-            i.getNeighbourCells().forEach { neighbour ->
-                _distance[i][neighbour] = 1
-                getNode(i).getChildren().add(getNode(neighbour))
-                getNode(neighbour).getChildren().add(getNode(i))
-            }
+    fun initialise(start: Int, end: Int, emptyCells: ArrayList<Int>) {
+        emptyCells.forEach { emptyCell ->
+            emptyCell.getNeighbourCells()
+                .forEach { neighbour ->
+                    if (emptyCells.contains(neighbour)) {
+                        _distance[emptyCell][neighbour] = 1
+                        getNode(emptyCell).getChildren().add(getNode(neighbour))
+                    }
+                }
         }
         startNodeName = start
         destinationNodeName = end

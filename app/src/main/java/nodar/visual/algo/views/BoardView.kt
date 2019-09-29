@@ -22,11 +22,16 @@ class BoardView @JvmOverloads constructor(
     private var boardContainerSize = 0
     private var cellHashMap = HashMap<Int, View>()
     private var djikstra: Djikstra
+    private var emptyCells = ArrayList<Int>()
 
     init {
         View.inflate(context, R.layout.board, this).apply {
             zoomLayout = findViewById(R.id.zoom_layout)
             cellContainer = findViewById(R.id.cell_container)
+        }
+
+        for (i in 0..195) {
+            emptyCells.add(i)
         }
 
         computeCrosswordContainerSize()
@@ -40,7 +45,11 @@ class BoardView @JvmOverloads constructor(
             width = boardContainerSize
         )
         djikstra = Djikstra()
-        djikstra.initialise(0,195)
+
+    }
+
+    fun startDjikstra() {
+        djikstra.initialise(0, 5, emptyCells)
         djikstra.djikstra()
     }
 
@@ -78,7 +87,8 @@ class BoardView @JvmOverloads constructor(
     }
 
     override fun onClick(view: View) {
-        cellHashMap[view.id]?.makeStartPosition()
+        cellHashMap[view.id]?.markAsWall()
+        emptyCells.remove(view.id)
     }
 
     private fun computeCrosswordContainerSize() {

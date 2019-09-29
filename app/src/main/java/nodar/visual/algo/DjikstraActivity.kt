@@ -10,5 +10,8 @@ class DjikstraActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_djikstra)
         board.drawBoard()
+        start_djikstra.setOnClickListener {
+            board.startDjikstra()
+        }
     }
 }
