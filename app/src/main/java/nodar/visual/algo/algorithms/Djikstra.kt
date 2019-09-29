@@ -46,6 +46,10 @@ class Djikstra {
     fun djikstra() {
         while (pq.isNotEmpty()) {
             val node = pq.poll()
+            if (node?.nodeName == destinationNodeName){
+                backTrack(parent, destinationNodeName)
+                return
+            }
             node?.apply {
                 visited = true
                 getChildren().forEach { child ->
@@ -57,10 +61,10 @@ class Djikstra {
                 }
             }
         }
-        backTrack(parent, destinationNodeName)
+
     }
 
-    fun backTrack(parent: IntArray, i: Int) {
+    private fun backTrack(parent: IntArray, i: Int) {
         if (i == -1)
             return
         onCompleteListener?.onNextStep(i)
