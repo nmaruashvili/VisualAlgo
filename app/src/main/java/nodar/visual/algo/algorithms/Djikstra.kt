@@ -7,8 +7,12 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class Djikstra {
+    //TODO: terrible naming. Need to be renamed
     interface OnCompleteListener {
         fun onNextStep(position: Int)
+        fun onProgress(position: Int)
+        fun onPathFound()
+        fun stopProgressing()
     }
 
     var onCompleteListener: OnCompleteListener? = null
@@ -50,6 +54,7 @@ class Djikstra {
                 backTrack(parent, destinationNodeName)
                 return
             }
+            onCompleteListener?.onProgress(node!!.nodeName)
             node?.apply {
                 visited = true
                 getChildren().forEach { child ->
@@ -65,8 +70,11 @@ class Djikstra {
     }
 
     private fun backTrack(parent: IntArray, i: Int) {
-        if (i == -1)
+        if (i == -1) {
+            onCompleteListener?.stopProgressing()
+            onCompleteListener?.onPathFound()
             return
+        }
         onCompleteListener?.onNextStep(i)
         Log.d("pathe", i.toString())
         backTrack(parent, parent[i])

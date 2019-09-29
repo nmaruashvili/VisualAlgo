@@ -1,8 +1,10 @@
 package nodar.visual.algo.views
 
 import android.content.Context
+import android.os.Handler
 import android.util.AttributeSet
 import android.util.DisplayMetrics
+import android.util.Log
 import nodar.visual.algo.views.BoardView.CursorType.START
 import nodar.visual.algo.views.BoardView.CursorType.WALL
 import nodar.visual.algo.views.BoardView.CursorType.DESTINATION
@@ -19,11 +21,42 @@ class BoardView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr), View.OnClickListener,
     Djikstra.OnCompleteListener {
+    override fun onPathFound() {
+        path.reverse()
+    }
+
+    override fun stopProgressing() {
+        simulateProgress(0)
+    }
+
+    override fun onProgress(position: Int) {
+        progress.add(position)
+    }
 
     override fun onNextStep(position: Int) {
-        if (position != startPosition && position != destination) {
-            cellHashMap[position]?.markAsPath()
+        path.add(position)
+    }
+
+    private fun simulateProgress(currentIndex: Int) {
+        if (currentIndex == progress.size) {
+            simulatePath(0)
+            return
         }
+        Handler().postDelayed({
+            if (progress[currentIndex] != startPosition && progress[currentIndex] != destination)
+                cellHashMap[progress[currentIndex]]?.markAsProgress()
+            simulateProgress(currentIndex + 1)
+        }, 20)
+    }
+
+    private fun simulatePath(currentIndex: Int) {
+        if (currentIndex == path.size)
+            return
+        Handler().postDelayed({
+            if (path[currentIndex] != startPosition && path[currentIndex] != destination)
+                cellHashMap[path[currentIndex]]?.markAsPath()
+            simulatePath(currentIndex + 1)
+        }, 20)
     }
 
     enum class CursorType {
@@ -40,6 +73,7 @@ class BoardView @JvmOverloads constructor(
     private var destination = -1
     private var wallPositions = ArrayList<Int>()
     private var path = ArrayList<Int>()
+    private var progress = ArrayList<Int>()
 
     var cursorType: CursorType? = null
 

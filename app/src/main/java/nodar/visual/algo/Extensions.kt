@@ -31,6 +31,10 @@ fun View.markAsPath() {
     this.background = ResourcesCompat.getDrawable(resources, R.drawable.path_cell, null)
 }
 
+fun View.markAsProgress() {
+    this.background = ResourcesCompat.getDrawable(resources, R.drawable.progress_cell, null)
+}
+
 //first->i second->j
 fun Int.coordinate(): Pair<Int, Int> {
     return Pair(this / 14, this % 14)
