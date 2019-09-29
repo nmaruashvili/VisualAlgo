@@ -1,9 +1,11 @@
 package nodar.visual.algo
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_djikstra.*
+import nodar.visual.algo.views.BoardView.CursorType.START
+import nodar.visual.algo.views.BoardView.CursorType.DESTINATION
+import nodar.visual.algo.views.BoardView.CursorType.WALL
 import nodar.visual.algo.views.NodarButton
 
 class DjikstraActivity : AppCompatActivity() {
@@ -18,20 +20,38 @@ class DjikstraActivity : AppCompatActivity() {
         start_location.nodarButtonClickListener =
             object : NodarButton.NodarButtonClickListener {
                 override fun onNodarButtonClicked() {
-                    Log.d("clicked?","true")
+                    handleStartLocationButtonClick()
+                    board.cursorType = START
                 }
             }
         destination.nodarButtonClickListener =
             object : NodarButton.NodarButtonClickListener {
                 override fun onNodarButtonClicked() {
-                    Log.d("clicked?","true")
+                    handleDestinationButtonClick()
+                    board.cursorType = DESTINATION
                 }
             }
         wall.nodarButtonClickListener =
             object : NodarButton.NodarButtonClickListener {
                 override fun onNodarButtonClicked() {
-                    Log.d("clicked?","true")
+                    handleWallButtonClick()
+                    board.cursorType = WALL
                 }
             }
+    }
+
+    private fun handleStartLocationButtonClick() {
+        wall.resetButtonState()
+        destination.resetButtonState()
+    }
+
+    private fun handleDestinationButtonClick() {
+        start_location.resetButtonState()
+        wall.resetButtonState()
+    }
+
+    private fun handleWallButtonClick() {
+        start_location.resetButtonState()
+        destination.resetButtonState()
     }
 }

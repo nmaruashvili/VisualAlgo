@@ -10,16 +10,25 @@ fun View.resize(height: Int, width: Int) {
     this.layoutParams = layoutParams
 }
 
-fun View.makeStartPosition() {
+fun View.markAsStartPosition() {
     this.background = ResourcesCompat.getDrawable(resources, R.drawable.start_cell_bg, null)
 }
 
-fun View.makeDestionationPosition() {
+fun View.markAsDestination() {
     this.background = ResourcesCompat.getDrawable(resources, R.drawable.destination_cell_bg, null)
 }
 
 fun View.markAsWall() {
     this.background = ResourcesCompat.getDrawable(resources, R.drawable.black_cell_bg, null)
+}
+
+fun View.reset() {
+    this.background =
+        ResourcesCompat.getDrawable(resources, R.drawable.white_cell_bg_with_black_border, null)
+}
+
+fun View.markAsPath() {
+    this.background = ResourcesCompat.getDrawable(resources, R.drawable.path_cell, null)
 }
 
 //first->i second->j

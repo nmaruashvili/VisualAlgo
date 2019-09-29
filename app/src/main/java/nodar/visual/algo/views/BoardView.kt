@@ -3,7 +3,9 @@ package nodar.visual.algo.views
 import android.content.Context
 import android.util.AttributeSet
 import android.util.DisplayMetrics
-import android.util.Log
+import nodar.visual.algo.views.BoardView.CursorType.START
+import nodar.visual.algo.views.BoardView.CursorType.WALL
+import nodar.visual.algo.views.BoardView.CursorType.DESTINATION
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
@@ -15,7 +17,18 @@ import nodar.visual.algo.algorithms.Djikstra
 
 class BoardView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr), View.OnClickListener {
+) : ConstraintLayout(context, attrs, defStyleAttr), View.OnClickListener,
+    Djikstra.OnCompleteListener {
+
+    override fun onNextStep(position: Int) {
+        if (position != startPosition && position != destination) {
+            cellHashMap[position]?.markAsPath()
+        }
+    }
+
+    enum class CursorType {
+        START, WALL, DESTINATION
+    }
 
     private val zoomLayout: ZoomLayout
     private val cellContainer: LinearLayout
@@ -23,6 +36,12 @@ class BoardView @JvmOverloads constructor(
     private var cellHashMap = HashMap<Int, View>()
     private var djikstra: Djikstra
     private var emptyCells = ArrayList<Int>()
+    private var startPosition = -1
+    private var destination = -1
+    private var wallPositions = ArrayList<Int>()
+    private var path = ArrayList<Int>()
+
+    var cursorType: CursorType? = null
 
     init {
         View.inflate(context, R.layout.board, this).apply {
@@ -45,12 +64,21 @@ class BoardView @JvmOverloads constructor(
             width = boardContainerSize
         )
         djikstra = Djikstra()
-
+        djikstra.addonCompleteListener(this)
     }
 
     fun startDjikstra() {
-        djikstra.initialise(0, 5, emptyCells)
-        djikstra.djikstra()
+        if (isValidInput()) {
+            djikstra.initialise(startPosition, destination, emptyCells)
+            djikstra.djikstra()
+        }
+    }
+
+    private fun isValidInput(): Boolean {
+        if (destination != -1 && startPosition != -1) {
+            return true
+        }
+        return false
     }
 
     fun drawBoard() {
@@ -87,8 +115,47 @@ class BoardView @JvmOverloads constructor(
     }
 
     override fun onClick(view: View) {
+        when (cursorType) {
+            START -> handleCursorStart(view)
+            WALL -> handleCursorWall(view)
+            DESTINATION -> handleCursorDestination(view)
+        }
+    }
+
+    private fun handleCursorStart(view: View) {
+        if (wallPositions.contains(view.id)) {
+            emptyCells.add(view.id)
+            wallPositions.remove(view.id)
+        }
+        cellHashMap[startPosition]?.reset()
+        cellHashMap[view.id]?.markAsStartPosition()
+        startPosition = view.id
+    }
+
+    private fun handleCursorWall(view: View) {
+        if (wallPositions.contains(view.id)) {
+            emptyCells.add(view.id)
+            wallPositions.remove(view.id)
+            cellHashMap[view.id]?.reset()
+            return
+        }
+        if (view.id == startPosition)
+            startPosition = -1
+        if (view.id == destination)
+            destination = -1
         cellHashMap[view.id]?.markAsWall()
         emptyCells.remove(view.id)
+        wallPositions.add(view.id)
+    }
+
+    private fun handleCursorDestination(view: View) {
+        if (wallPositions.contains(view.id)) {
+            wallPositions.remove(view.id)
+            emptyCells.add(view.id)
+        }
+        cellHashMap[destination]?.reset()
+        cellHashMap[view.id]?.markAsDestination()
+        destination = view.id
     }
 
     private fun computeCrosswordContainerSize() {

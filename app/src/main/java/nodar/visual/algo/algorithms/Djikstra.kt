@@ -7,12 +7,21 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class Djikstra {
+    interface OnCompleteListener {
+        fun onNextStep(position: Int)
+    }
+
+    var onCompleteListener: OnCompleteListener? = null
     val graph = HashMap<Int, Node>()
     var _distance = Array(1000) { IntArray(1000) }
     var destinationNodeName = 0
     var startNodeName = 0
     val pq = PriorityQueue<Node>()
     val parent = IntArray(1000)
+
+    fun addonCompleteListener(_onCompleteListener: OnCompleteListener) {
+        onCompleteListener = _onCompleteListener
+    }
 
     fun initialise(start: Int, end: Int, emptyCells: ArrayList<Int>) {
         emptyCells.forEach { emptyCell ->
@@ -54,6 +63,7 @@ class Djikstra {
     fun backTrack(parent: IntArray, i: Int) {
         if (i == -1)
             return
+        onCompleteListener?.onNextStep(i)
         Log.d("pathe", i.toString())
         backTrack(parent, parent[i])
     }

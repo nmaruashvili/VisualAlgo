@@ -23,13 +23,22 @@ class NodarButton @JvmOverloads constructor(
     var nodarButtonClickListener: NodarButtonClickListener? = null
 
     override fun onClick(view: View) {
-        _isSelected = !_isSelected
-        view.isSelected = _isSelected
-        toggleTextColor()
+        toggleButtonState()
         nodarButtonClickListener?.onNodarButtonClicked()
     }
 
-    fun toggleTextColor() {
+    fun resetButtonState() {
+        _isSelected = true
+        toggleButtonState()
+    }
+
+    private fun toggleButtonState() {
+        _isSelected = !_isSelected
+        isSelected = _isSelected
+        toggleTextColor()
+    }
+
+    private fun toggleTextColor() {
         if (_isSelected)
             setTextColor(resources.getColor(R.color.white))
         else
